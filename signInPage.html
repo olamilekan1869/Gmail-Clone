@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="./signInPage.css">
+
+</head>
+<body>
+   
+    <div class="body">
+        <form id="signInForm">
+        <h2>Sign In</h2>
+
+        <div class="container">
+
+        <div class="text">
+        
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" name="email" placeholder="enter your email">
+            </div><br>
+            <div>
+                <label for="password">Password:</label>
+                <input type="text" name="password" placeholder="enter your password">
+            </div><br>
+            <button class="btn btn-primary" type="submit" id="signInBTN">
+                <div id="spinner" class="spinner-border spinner-border-sm d-none" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>    
+                Sign In
+            </button>
+        </div>
+
+        </div>
+        </form>
+    </div>
+
+   
+</body>
+<script type="module">
+   
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getFirestore,addDoc,collection } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+    import { getAuth, sendEmailVerification, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyDIHmHXSbU_CaFiqAriPC7zl7jS7TiJxg0",
+      authDomain: "instablog-1647a.firebaseapp.com",
+      projectId: "instablog-1647a",
+      storageBucket: "instablog-1647a.appspot.com",
+      messagingSenderId: "823844577266",
+      appId: "1:823844577266:web:81b2bbb780548d5875156b"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    //initialize auth
+    const auth = getAuth(app)
+
+    const db = getFirestore(app)
+
+    const colRef = collection(db, 'Gmail Clone')
+    
+
+    signInForm.addEventListener('submit', async (event)=>{
+        event.preventDefault()
+        
+        const email = signInForm.email.value
+        const password = signInForm.password.value
+
+       
+        spinner.classList.remove('d-none')
+        signInBTN.disabled = true
+        try {
+          const signInTask =  await signInWithEmailAndPassword(auth, email, password)
+           console.log('user has been signed in');
+           
+           window.location.href = './index.html' 
+        } catch (error) {
+            console.log(error);
+        } finally{
+             
+        signInBTN.disabled = false  
+        spinner.classList.add('d-none')
+        }
+
+
+    })
+
+    
+  </script>
+</html>

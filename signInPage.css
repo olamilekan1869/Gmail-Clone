@@ -1,0 +1,23 @@
+body{
+    background-color: blueviolet;
+    background-image: url('https://fjwp.s3.amazonaws.com/blog/wp-content/uploads/2020/01/11140027/send-email-1024x512.png');
+    background-size: cover;
+}
+.container{
+    background-color: white;
+    width: 40%;
+    border-radius: 2%;
+    height: 40vh;
+
+}
+.text{
+    padding-top: 60px;
+}
+#signInForm{
+    /* margin: auto; */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+
+}

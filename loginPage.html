@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="./signInPage.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .body {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #spinner {
+            display: none;
+        }
+
+        .text {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <form id="signInForm" class="container">
+            <h2>Sign In</h2>
+            <div class="text">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" id="signInBTN">
+                    <div id="spinner" class="spinner-border spinner-border-sm" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Sign In
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getFirestore,addDoc,collection } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+    import { getAuth, sendEmailVerification, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyDIHmHXSbU_CaFiqAriPC7zl7jS7TiJxg0",
+      authDomain: "instablog-1647a.firebaseapp.com",
+      projectId: "instablog-1647a",
+      storageBucket: "instablog-1647a.appspot.com",
+      messagingSenderId: "823844577266",
+      appId: "1:823844577266:web:81b2bbb780548d5875156b"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    //initialize auth
+    const auth = getAuth(app)
+
+    const db = getFirestore(app)
+
+    const colRef = collection(db, 'Gmail Clone')
+    
+
+    signInForm.addEventListener('submit', async (event)=>{
+        event.preventDefault()
+        
+        const email = signInForm.email.value
+        const password = signInForm.password.value
+
+        // Disable the button and show the loading spinner
+        spinner.classList.remove('d-none')
+        signInBTN.disabled = true
+        try {
+          const signInTask =  await signInWithEmailAndPassword(auth, email, password) //sign in user
+        //    console.log('user has been signed in');
+           
+           window.location.href = './index.html' //redirect
+        } catch (error) {
+            // console.log(error);
+        } finally{
+             // Enable the button and hide the loading spinner
+        signInBTN.disabled = false  
+        spinner.classList.add('d-none')
+        }
+
+
+    })
+    </script>
+</body>
+</html>

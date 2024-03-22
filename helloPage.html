@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        form div {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button[type="submit"],
+        button#signOutBtn,
+        button#deleteBTN {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover,
+        button#signOutBtn:hover,
+        button#deleteBTN:hover {
+            background-color: #0056b3;
+        }
+        #errorP {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sign Up</h2>
+        <form id="signUpForm">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" name="name" placeholder="Enter your name">
+            </div>
+            <div>
+                <label for="phoneNo">Phone No.:</label>
+                <input type="tel" name="tel" placeholder="Enter your phone number">
+            </div>
+            <div>
+                <label for="gender">Gender:</label>
+                <select name="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" name="email" placeholder="Enter your email">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" placeholder="Enter your password">
+            </div>
+            <div>
+                <label for="conpassword">Confirm Password:</label>
+                <input type="password" name="conpassword" placeholder="Confirm your password">
+            </div>
+            <p id="errorP"></p>
+            <button type="submit">Sign Up</button>
+        </form>
+
+    </div>
+
+    
+
+    <script type="module">
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+        import { getFirestore,addDoc,collection } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+        import { getAuth,createUserWithEmailAndPassword,sendEmailVerification,onAuthStateChanged , signOut, signInWithEmailAndPassword, deleteUser} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+       
+        const firebaseConfig = {
+          apiKey: "AIzaSyDIHmHXSbU_CaFiqAriPC7zl7jS7TiJxg0",
+          authDomain: "instablog-1647a.firebaseapp.com",
+          projectId: "instablog-1647a",
+          storageBucket: "instablog-1647a.appspot.com",
+          messagingSenderId: "823844577266",
+          appId: "1:823844577266:web:81b2bbb780548d5875156b"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        //initialize auth
+        const auth = getAuth(app)
+    
+        const db = getFirestore(app)
+    
+        const colRef = collection(db, 'Gmail Clone')
+    
+    
+        
+    
+        signUpForm.addEventListener('submit', async (event)=>{
+            event.preventDefault()
+            const email = signUpForm.email.value
+            const name = signUpForm.name.value
+            const gender = signUpForm.gender.value
+            const tel = signUpForm.tel.value
+            const password = signUpForm.password.value
+            const conpassword = signUpForm.conpassword.value
+      
+            
+    
+            try {
+               const createUserTask = await createUserWithEmailAndPassword(auth, email, password)
+               console.log(createUserTask);
+               const emailVer = await sendEmailVerification(createUserTask.user)
+    
+               const addDocTask = await addDoc(colRef, {gender, tel, name, email})
+               console.log('account has been created');
+            } catch (error) {
+                console.log(error);
+            }
+    
+               window.location.href = './signInPage.html' 
+        
+        })
+    
+        onAuthStateChanged(auth, (user)=>{  
+            if (user) {
+               console.log(user); 
+            }else{
+                console.log('No one is signed in ');
+            }
+        })
+    
+        // signOutBtn.addEventListener('click',async ()=>{
+        //     try { 
+        //    const signOutTask = await signOut(auth) 
+        //    console.log('user has been signed out');
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // })
+    
+        // deleteBTN.addEventListener('click',async ()=>{
+        //     try {
+        //       const deleteUSerTask = await deleteUser(auth.currentUser)
+        //       console.log('user account has been deleted');
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // })
+      </script>
+</body>
+</html>
